@@ -1,0 +1,17 @@
+
+create_t(
+    tn : 'table'
+    fn : '../config/tables/small_init.txt'
+    sz : '350000'
+)
+
+
+set_t(tn : 'table')
+
+
+sort(ds : '*')
+statistics(ds : 'count')
+
+
+
+
