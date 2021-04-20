@@ -37,6 +37,8 @@ class JsonConfStruct:
             return self.__scripts
 
 
+
+
 def removef(fname):
         os.remove(fname)
 

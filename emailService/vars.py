@@ -6,6 +6,7 @@ REPORT_DIR_PATH         = "../config/reports/"
 SCRIPTS_DIR_PATH        = "../scripts/bashScripts/"
 SYS_LOG_FILE_NAME       = "../config/log/sys_log.txt"
 WORD_FILE_NAME          = "../config/tables/init.txt"
+MAIN_DATA_FILE_PATH     = WORD_FILE_NAME 
 
 DBS_CONF_SUBJECT_TYPE   = "DBS_CONF"
 DBS_DATA_SUBJECT_TYPE   = "DBS_DATA"
@@ -20,5 +21,9 @@ EVENT_GET_DATA      = "WARNING: receiving a data by mail"
 EVENT_GET_CONF      = "WARNING: receiving a configuration data by mail"
 EVENT_RUN_TASK      = "WARNING: run task ==> "
 
+
 EVENT_CLEAR_WORK_SPACE  = "WARNING: clear work space [file] ==> "
 EVENT_CREATE_WORD_SPACE = "WARNING: create word space [OK]"
+
+ERROR_FILE_NOT_FOUND    = "ERROR: file not found: "
+INVALID_START_PARAM     = "ERROR: Incorrect arguments were entered to start the program => "

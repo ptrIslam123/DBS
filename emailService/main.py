@@ -8,10 +8,12 @@ import readGmail as rGmail
 import parseConfSMTP as pConf
 import execTasks as execT
 import sysloger 
+import sys
+import os
 
 
 def createWorkFile(wordData):
-    pConf.writef(env.WORD_FILE_NAME, wordData)
+    pConf.writef(env.MAIN_DATA_FILE_PATH, wordData)
     sysloger.log(env.EVENT_CREATE_WORD_SPACE)
 
 
@@ -29,8 +31,13 @@ def runTasks(task_list, data, result_fn):
     for task in task_list:
         taskFileName = env.SCRIPTS_DIR_PATH + task
 
-        execT.execTaskAndWriteResultToFile([taskFileName], result_fn)
-        sysloger.log(env.EVENT_RUN_TASK + taskFileName)
+        if os.path.exists(taskFileName):
+            execT.execTaskAndWriteResultToFile([taskFileName], result_fn)
+            sysloger.log(env.EVENT_RUN_TASK + taskFileName)
+
+        else:
+            sysloger.log(env.ERROR_FILE_NOT_FOUND + taskFileName)
+
 
     
 
@@ -73,19 +80,18 @@ def getData(email_addr, password):
 
 
 def getConfData(email_addr, password):
-    emailS = rGmail.readGmail(email_addr, password, \
-                            env.DBS_CONF_SUBJECT_TYPE)
-    strJson = emailS.get_body()
+    emailStruct = rGmail.readGmail(email_addr, password, \
+                                env.DBS_CONF_SUBJECT_TYPE)
+    jsonStruct = emailStruct.get_body()
     sysloger.log(env.EVENT_GET_CONF)
-    return pConf.strToJsonConfStruct(strJson)
+    return pConf.strToJsonConfStruct(jsonStruct)
 
 
-def main():
-    email_addr  = "ptrislam123@gmail.com"
-    passwd      = "*****"
 
-    emailS      = getConfData(email_addr, passwd)
-    targetData  = getData(email_addr, passwd)
+def getSettingsFromNetAndExecuteTasks(email_addr, password):
+
+    emailS      = getConfData(email_addr, password)
+    targetData  = getData(email_addr, password)
 
     email_from  = emailS.get_email_from()
     email_to    = emailS.get_email_to()
@@ -106,6 +112,34 @@ def main():
                 password, reportData, result_fn)
 
     clearWordSpace(env.REPORT_DIR_PATH + result_fn)
+
+
+def executeTasks(jsonConf):    
+    jsonStruct  = pConf.getConf(jsonConf)
+
+    task_list   = jsonStruct.get_scripts()
+    target_data = pConf.readf(env.MAIN_DATA_FILE_PATH)
+    result_fn   = jsonStruct.get_result_fname()
+
+    runTasks(task_list, target_data, result_fn)
+    
+
+
+def main():
+    flag = sys.argv[1]
+    
+    if flag == "-he":
+            # python main.py -ne
+            executeTasks(env.MAIN_CONFIG_FILE_PATH)
+
+    elif flag == "-ne":
+        # python main.py -ne email_addr password
+        email_addr, password = sys.argv[2], sys.argv[3]
+        getSettingsFromNetAndExecuteTasks(email_addr, password)
+
+    else:
+        sysloger.log(env.INVALID_START_PARAM + flag)
+        sys.exit(-1)
 
 
 
