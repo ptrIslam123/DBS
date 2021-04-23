@@ -2,6 +2,7 @@
 
 from PySide import QtGui
 from vars import *
+import json
 
 class BaseWindow(QtGui.QWidget, object):
 
@@ -33,6 +34,9 @@ class BaseWindow(QtGui.QWidget, object):
         self.show()
 
 
+    def close_window(self):
+        print("close this window!")
+
     
 
 class WindowEditConf(BaseWindow):
@@ -41,7 +45,7 @@ class WindowEditConf(BaseWindow):
             width=DEFAULT_M_WINDOW_WIDTH, hight=DEFAULT_M_WINDOW_HIGHT):
         super(WindowEditConf, self).__init__(titile, pos_x, pos_y, width, hight)
         
-        self.__resultFileName   =  None
+        self.__resultFileName   = None
         self.__emailTo          = None
         self.__scripts          = None
         self.__password         = None
@@ -104,7 +108,44 @@ class WindowEditConf(BaseWindow):
         self.__dataFileName     = self.__dataFileNameLineEdit.text()
         self.__emailFrom        = self.__emailFromLineEdit.text()
 
+       
+        self.makeJsonDict(
+            self.__resultFileName,
+            self.__emailTo,
+            self.__scripts,
+            self.__password,
+            self.__dataFileName,
+            self.__emailFrom
+        )
 
+        self.writeJsonDictToFile(MAIN_CONFIG_PATH_FILE, self.__jsonDicrt)
+        self.close_window()
+
+    def writeJsonDictToFile(self, fname, jsonObj):
+        with open(fname, 'w') as file:
+            json.dump(jsonObj, file, indent=4)
+
+
+    def readJsonFromFile(self, fname):
+        pass
+
+
+
+    def makeJsonDict(self, result_fn, email_to, scripts, password, \
+                                                data_fn, email_from):
+         
+         scripts_list = scripts.split(',')
+         
+         self.__jsonDicrt = {
+            "result_fname": result_fn, 
+            "email_to": email_to, 
+            "scripts": scripts_list, 
+            "password": password, 
+            "data_fname": data_fn, 
+            "email_from": email_from
+        }
+
+        
 
     def get_result_file_name(self):
         return self.__resultFileName
@@ -171,6 +212,7 @@ class WindowNetSettings(BaseWindow):
     def applyConf(self):
         self.__email_addr   = self.__emailAddrLineEdit.text()
         self.__password     = self.__passwordLineEdit.text()
+        self.close_window()
         
 
 

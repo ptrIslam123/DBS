@@ -19,9 +19,9 @@ class MainWindow(QtGui.QMainWindow):
         self.__width = width
         self.__hight = hight
 
-        self.__editConfWindow = None
-        self.__netSettingsWindow = None
-
+        self.__editConfWindow       = None
+        self.__netSettingsWindow    = None
+        
         self.initUI()
         self.createMenu()
 
@@ -34,12 +34,19 @@ class MainWindow(QtGui.QMainWindow):
             self.__hight
         )
 
+        self.__textEdit = QtGui.QTextEdit()
+        self.setCentralWidget(self.__textEdit)
+
         self.setWindowTitle(self.__title)
 
 
 
     def createMenu(self):
         
+        self.__action_open_file     = QtGui.QAction("open file", self)
+        self.__action_close_file    = QtGui.QAction("close file", self)
+        self.__action_save_file     = QtGui.QAction("save file as", self)
+        self.__action_close_app     = QtGui.QAction("Exit", self)
         self.__action_edit_conf     = QtGui.QAction("edit config", self)
         self.__action_run_scripts   = QtGui.QAction("run this current configure", self)
         self.__action_get_settings_and_run_scripts = QtGui.QAction("get settings and run", self) 
@@ -47,15 +54,24 @@ class MainWindow(QtGui.QMainWindow):
         self.__action_edit_conf.triggered.connect(self.edit_conf)
         self.__action_run_scripts.triggered.connect(self.run_scripts)
         self.__action_get_settings_and_run_scripts.triggered.connect(self.get_settings_and_run_scripts)
-        
+        self.__action_open_file.triggered.connect(self.read_file)
+        self.__action_close_file.triggered.connect(self.close_file)
+        self.__action_save_file.triggered.connect(self.save_file)
+        self.__action_close_app.triggered.connect(self.close_window)
+
         
         self.__menubar              = self.menuBar()
 
 
-        self.__edit_conf            = self.__menubar.addMenu("edit")
-        self.__run_scripts          = self.__menubar.addMenu("run")
+        self.__file                 = self.__menubar.addMenu("File") 
+        self.__edit_conf            = self.__menubar.addMenu("Edit")
+        self.__run_scripts          = self.__menubar.addMenu("Run")
 
 
+        self.__file.addAction(self.__action_open_file)
+        self.__file.addAction(self.__action_close_file)
+        self.__file.addAction(self.__action_save_file)
+        self.__file.addAction(self.__action_close_app)
         self.__edit_conf.addAction(self.__action_edit_conf)
         self.__run_scripts.addAction(self.__action_run_scripts)
         self.__run_scripts.addAction(self.__action_get_settings_and_run_scripts)
@@ -80,8 +96,43 @@ class MainWindow(QtGui.QMainWindow):
 
         self.__netSettingsWindow.show_window()
 
+
+
+    def read_file(self):
+        fname = self.getWorkFileName()
+
+        with open(fname, 'r') as file:
+                text = file.read()
+                self.__textEdit.setText(text)
+        
+
+
+    def close_file(self):
+        self.__textEdit.setText("")
+
+
+
+    def save_file(self):
+        text    = self.__textEdit.toPlainText()
+        fname   = self.getWorkFileName()
+
+        with open(fname, 'w') as file:
+            file.write(text)
+        
+
+
+    def getWorkFileName(self):
+        fname, _ = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '/home')
+        return fname
+    
+
+
     def show_window(self):
         self.show()
+
+    
+    def close_window(self):
+        print("close this window!")
 
 
 
