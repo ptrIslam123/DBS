@@ -125,11 +125,12 @@ def executeTasks(jsonConf):
     
 
 
+
 def main():
     flag = sys.argv[1]
     
     if flag == "-he":
-            # python main.py -ne
+            # python main.py -he
             executeTasks(env.MAIN_CONFIG_FILE_PATH)
 
     elif flag == "-ne":

@@ -8,4 +8,4 @@ DEFAULT_M_WINDOW_POS_Y  = 300
 MAIN_WINDOW_TITLE       = "The Main Window"
 DEFAULT_WINDOW_TITLE    = "The Window"
 
-MAIN_CONFIG_PATH_FILE   = "./conf.json" #../emailService/confSMTP/mainConf.json
+MAIN_CONFIG_PATH_FILE   = "../emailService/confSMTP/mainConf.json"

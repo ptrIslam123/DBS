@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 from vars import *
 import json
+import runScripts
 
 class BaseWindow(QtGui.QWidget, object):
 
@@ -35,7 +36,8 @@ class BaseWindow(QtGui.QWidget, object):
 
 
     def close_window(self):
-        print("close this window!")
+        self.close()
+
 
     
 
@@ -59,6 +61,7 @@ class WindowEditConf(BaseWindow):
         self.__gridBox  = QtGui.QGridLayout()
 
         self.__reconf   = QtGui.QPushButton("reconfigure")
+        self.__cancel   = QtGui.QPushButton("cancel")
 
         resultFileNameLabel = QtGui.QLabel("result file name")
         emailToLabel        = QtGui.QLabel("email to")
@@ -90,17 +93,20 @@ class WindowEditConf(BaseWindow):
         self.__gridBox.addWidget(self.__passwordLineEdit, 4, 2)
         self.__gridBox.addWidget(self.__dataFileNameLineEdit, 5, 2)
         self.__gridBox.addWidget(self.__emailFromLineEdit, 6, 2)
-        self.__gridBox.addWidget(self.__reconf, 7, 2)
+        self.__gridBox.addWidget(self.__reconf, 7, 4)
+        self.__gridBox.addWidget(self.__cancel, 7, 3)
 
 
         self.setLayout(self.__gridBox)
 
 
         self.__reconf.clicked.connect(self.reconfigure)
+        self.__cancel.clicked.connect(self.close_window)
 
 
 
     def reconfigure(self):
+
         self.__resultFileName   = self.__resultFileNameLineEdit.text()
         self.__emailTo          = self.__emaillToLineEdit.text()
         self.__scripts          = self.__scriptsLineEdit.text()
@@ -190,6 +196,7 @@ class WindowNetSettings(BaseWindow):
         self.__gridBox  = QtGui.QGridLayout()
 
         self.__applyBtn = QtGui.QPushButton("apply")
+        self.__cancel   = QtGui.QPushButton("cancel")
 
         emailAddrLabel  = QtGui.QLabel("email address")
         passwordLabel   = QtGui.QLabel("password")
@@ -202,16 +209,21 @@ class WindowNetSettings(BaseWindow):
         self.__gridBox.addWidget(passwordLabel, 2, 1)
         self.__gridBox.addWidget(self.__emailAddrLineEdit, 1, 2)
         self.__gridBox.addWidget(self.__passwordLineEdit, 2, 2)
-        self.__gridBox.addWidget(self.__applyBtn, 3, 2)
+        self.__gridBox.addWidget(self.__applyBtn, 3, 4)
+        self.__gridBox.addWidget(self.__cancel, 3, 3)
 
         self.setLayout(self.__gridBox)
 
         self.__applyBtn.clicked.connect(self.applyConf)
+        self.__cancel.clicked.connect(self.close_window)
 
 
     def applyConf(self):
         self.__email_addr   = self.__emailAddrLineEdit.text()
         self.__password     = self.__passwordLineEdit.text()
+        
+        runScripts.getNetSettingAndRunTasks(self.__email_addr, self.__password)
+
         self.close_window()
         
 

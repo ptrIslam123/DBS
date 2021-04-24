@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-from PySide import QtGui
+from PySide import QtGui, QtCore
 import sys
 import windows
+import runScripts
 from vars import * 
 
 
@@ -49,6 +50,7 @@ class MainWindow(QtGui.QMainWindow):
         self.__action_close_app     = QtGui.QAction("Exit", self)
         self.__action_edit_conf     = QtGui.QAction("edit config", self)
         self.__action_run_scripts   = QtGui.QAction("run this current configure", self)
+        self.__action_set_font      = QtGui.QAction("font", self)
         self.__action_get_settings_and_run_scripts = QtGui.QAction("get settings and run", self) 
 
         self.__action_edit_conf.triggered.connect(self.edit_conf)
@@ -58,6 +60,7 @@ class MainWindow(QtGui.QMainWindow):
         self.__action_close_file.triggered.connect(self.close_file)
         self.__action_save_file.triggered.connect(self.save_file)
         self.__action_close_app.triggered.connect(self.close_window)
+        self.__action_set_font.triggered.connect(self.set_font)
 
         
         self.__menubar              = self.menuBar()
@@ -65,6 +68,7 @@ class MainWindow(QtGui.QMainWindow):
 
         self.__file                 = self.__menubar.addMenu("File") 
         self.__edit_conf            = self.__menubar.addMenu("Edit")
+        self.__view                 = self.__menubar.addMenu("View")
         self.__run_scripts          = self.__menubar.addMenu("Run")
 
 
@@ -73,6 +77,7 @@ class MainWindow(QtGui.QMainWindow):
         self.__file.addAction(self.__action_save_file)
         self.__file.addAction(self.__action_close_app)
         self.__edit_conf.addAction(self.__action_edit_conf)
+        self.__view.addAction(self.__action_set_font)
         self.__run_scripts.addAction(self.__action_run_scripts)
         self.__run_scripts.addAction(self.__action_get_settings_and_run_scripts)
         
@@ -87,7 +92,7 @@ class MainWindow(QtGui.QMainWindow):
 
 
     def run_scripts(self):
-        pass
+        runScripts.runExecTasks()
 
 
     def get_settings_and_run_scripts(self):
@@ -126,14 +131,21 @@ class MainWindow(QtGui.QMainWindow):
         return fname
     
 
+    def set_font(self):
+        font, ok = QtGui.QFontDialog.getFont()
+        if ok:
+            self.__textEdit.setFont(font)
+
 
     def show_window(self):
         self.show()
 
     
     def close_window(self):
-        print("close this window!")
+        QtCore.QCoreApplication.instance().quit()
 
+
+       
 
 
 def main():
