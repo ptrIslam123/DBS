@@ -103,6 +103,8 @@ class WindowEditConf(BaseWindow):
         self.__reconf.clicked.connect(self.reconfigure)
         self.__cancel.clicked.connect(self.close_window)
 
+        
+
 
 
     def reconfigure(self):

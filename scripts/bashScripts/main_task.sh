@@ -1,5 +1,11 @@
 #! /bin/bash
 
+
+echo "### MAIN_TASK ###"
+echo ""
+
+cd ../scripts/bashScripts/
+
 bash ./_count_cameras_of_put_on_guard.sh
 bash ./_count_cameras_of_unguarded.sh
 bash ./_count_cameras_of_unguared.sh
@@ -15,4 +21,11 @@ bash ./_count_of_processed_alarms.sh
 bash ./_count_of_suspicious_situation.sh
 bash ./_count_of_undetected_alarms.sh
 bash ./_count_of_unprocessed_alarms.sh
+
+
+echo "### MAIN_TASK_END ###"
+echo ""
+echo ""
+
+
 

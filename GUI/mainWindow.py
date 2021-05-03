@@ -1,4 +1,5 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 from PySide import QtGui, QtCore
 import sys
@@ -107,7 +108,7 @@ class MainWindow(QtGui.QMainWindow):
         fname = self.getWorkFileName()
 
         with open(fname, 'r') as file:
-                text = file.read()
+                text = file.read().decode("utf-8")
                 self.__textEdit.setText(text)
         
 
@@ -127,7 +128,7 @@ class MainWindow(QtGui.QMainWindow):
 
 
     def getWorkFileName(self):
-        fname, _ = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '/home')
+        fname, _ = QtGui.QFileDialog.getOpenFileName(self, 'Open file', '../config/reports')
         return fname
     
 
